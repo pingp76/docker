@@ -3,7 +3,6 @@ package main
 import (
 	"io/ioutil"
 	"os"
-	"strings"
 
 	"github.com/docker/docker/pkg/integration/checker"
 	"github.com/go-check/check"
@@ -12,12 +11,7 @@ import (
 func (s *DockerSuite) TestRmContainerWithRemovedVolume(c *check.C) {
 	testRequires(c, SameHostDaemon)
 
-	prefix := ""
-	slash := "/"
-	if daemonPlatform == "windows" {
-		prefix = "c:"
-		slash = `\`
-	}
+	prefix, slash := getPrefixAndSlashFromDaemonPlatform()
 
 	tempDir, err := ioutil.TempDir("", "test-rm-container-with-removed-volume-")
 	if err != nil {
@@ -34,12 +28,7 @@ func (s *DockerSuite) TestRmContainerWithRemovedVolume(c *check.C) {
 }
 
 func (s *DockerSuite) TestRmContainerWithVolume(c *check.C) {
-	prefix := ""
-	slash := "/"
-	if daemonPlatform == "windows" {
-		prefix = "c:"
-		slash = `\`
-	}
+	prefix, slash := getPrefixAndSlashFromDaemonPlatform()
 
 	dockerCmd(c, "run", "--name", "foo", "-v", prefix+slash+"srv", "busybox", "true")
 
@@ -87,11 +76,9 @@ func (s *DockerSuite) TestRmContainerOrphaning(c *check.C) {
 }
 
 func (s *DockerSuite) TestRmInvalidContainer(c *check.C) {
-	if out, _, err := dockerCmdWithError("rm", "unknown"); err == nil {
-		c.Fatal("Expected error on rm unknown container, got none")
-	} else if !strings.Contains(out, "Failed to remove container") {
-		c.Fatalf("Expected output to contain 'Failed to remove container', got %q", out)
-	}
+	out, _, err := dockerCmdWithError("rm", "unknown")
+	c.Assert(err, checker.NotNil, check.Commentf("Expected error on rm unknown container, got none"))
+	c.Assert(out, checker.Contains, "No such container")
 }
 
 func createRunningContainer(c *check.C, name string) {

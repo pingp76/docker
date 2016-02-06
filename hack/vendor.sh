@@ -7,7 +7,7 @@ source 'hack/.vendor-helpers.sh'
 
 # the following lines are in sorted order, FYI
 clone git github.com/Azure/go-ansiterm 70b2c90b260171e829f1ebd7c17f600c11858dbe
-clone git github.com/Microsoft/go-winio 2b085935f02c272e7a1855df6f8fe03029ffcadd
+clone git github.com/Microsoft/go-winio eb176a9831c54b88eaf9eb4fbc24b94080d910ad
 clone git github.com/Sirupsen/logrus v0.9.0 # logrus is a common dependency among multiple deps
 clone git github.com/docker/libtrust 9cbd2a1374f46905c68a4eb3694a130610adc62a
 clone git github.com/go-check/check 11d3bc7aa68e238947792f30573146a3231fc0f1
@@ -16,15 +16,15 @@ clone git github.com/gorilla/mux e444e69cbd
 clone git github.com/kr/pty 5cf931ef8f
 clone git github.com/mattn/go-shellwords v1.0.0
 clone git github.com/mattn/go-sqlite3 v1.1.0
-clone git github.com/microsoft/hcsshim 35ad4d808a97203cb1748d7c43167e91f51e7f86
+clone git github.com/Microsoft/hcsshim 35ad4d808a97203cb1748d7c43167e91f51e7f86
 clone git github.com/mistifyio/go-zfs v2.1.1
 clone git github.com/tchap/go-patricia v2.1.0
 clone git github.com/vdemeester/shakers 3c10293ce22b900c27acad7b28656196fcc2f73b
 clone git golang.org/x/net 47990a1ba55743e6ef1affd3a14e5bac8553615d https://github.com/golang/net.git
 clone git golang.org/x/sys eb2c74142fd19a79b3f237334c7384d5167b1b46 https://github.com/golang/sys.git
 clone git github.com/docker/go-units 651fc226e7441360384da338d0fd37f2440ffbe3
-clone git github.com/docker/go-connections v0.1.2
-clone git github.com/docker/engine-api bdbab71ec21209ef56dffdbe42c9d21843c30862
+clone git github.com/docker/go-connections v0.1.3
+clone git github.com/docker/engine-api 9a940e4ead265e18d4feb9e3c515428966a08278
 clone git github.com/RackSec/srslog 6eb773f331e46fbba8eecb8e794e635e75fc04de
 clone git github.com/imdario/mergo 0.2.1
 
@@ -48,7 +48,7 @@ clone git github.com/boltdb/bolt v1.1.0
 clone git github.com/miekg/dns 75e6e86cc601825c5dbcd4e0c209eab180997cd7
 
 # get graph and distribution packages
-clone git github.com/docker/distribution c301f8ab27f4913c968b8d73a38e5dda79b9d3d7
+clone git github.com/docker/distribution ab9b433fcaf7c8319562a8b80f2720f5faca712f
 clone git github.com/vbatts/tar-split v0.9.11
 
 # get desired notary commit, might also need to be updated in Dockerfile

@@ -194,7 +194,7 @@ func (d *Daemon) getClientConfig() (*clientConfig, error) {
 		transport = &http.Transport{}
 	}
 
-	sockets.ConfigureTCPTransport(transport, proto, addr)
+	sockets.ConfigureTransport(transport, proto, addr)
 
 	return &clientConfig{
 		transport: transport,
@@ -456,6 +456,11 @@ func (d *Daemon) queryRootDir() (string, error) {
 
 func (d *Daemon) sock() string {
 	return fmt.Sprintf("unix://%s/docker.sock", d.folder)
+}
+
+func (d *Daemon) waitRun(contID string) error {
+	args := []string{"--host", d.sock()}
+	return waitInspectWithArgs(contID, "{{.State.Running}}", "true", 10*time.Second, args...)
 }
 
 // Cmd will execute a docker CLI command against this Daemon.
@@ -1685,10 +1690,15 @@ func waitExited(contID string, duration time.Duration) error {
 // in the inspect output. It will wait until the specified timeout (in seconds)
 // is reached.
 func waitInspect(name, expr, expected string, timeout time.Duration) error {
+	return waitInspectWithArgs(name, expr, expected, timeout)
+}
+
+func waitInspectWithArgs(name, expr, expected string, timeout time.Duration, arg ...string) error {
 	after := time.After(timeout)
 
+	args := append(arg, "inspect", "-f", expr, name)
 	for {
-		cmd := exec.Command(dockerBinary, "inspect", "-f", expr, name)
+		cmd := exec.Command(dockerBinary, args...)
 		out, _, err := runCommandWithOutput(cmd)
 		if err != nil {
 			if !strings.Contains(out, "No such") {
@@ -1741,4 +1751,13 @@ func runSleepingContainerInImage(c *check.C, image string, extraArgs ...string) 
 	args = append(args, image)
 	args = append(args, defaultSleepCommand...)
 	return dockerCmd(c, args...)
+}
+
+// minimalBaseImage returns the name of the minimal base image for the current
+// daemon platform.
+func minimalBaseImage() string {
+	if daemonPlatform == "windows" {
+		return WindowsBaseImage
+	}
+	return "scratch"
 }
